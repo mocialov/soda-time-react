@@ -1,0 +1,73 @@
+.settings {
+  max-width: 800px;
+}
+
+.settings h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.settings-section {
+  background: #17181b;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.settings-section h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #e74c3c;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.setting-item:last-child {
+  margin-bottom: 0;
+}
+
+.setting-item label {
+  font-size: 16px;
+  color: #ccc;
+}
+
+.setting-item select,
+.setting-item input[type="number"] {
+  padding: 8px 15px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  min-width: 150px;
+  outline: none;
+}
+
+.setting-item input[type="range"] {
+  width: 200px;
+}
+
+.setting-item.checkbox {
+  justify-content: flex-start;
+}
+
+.setting-item.checkbox input {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.setting-item input[type="color"] {
+  width: 60px;
+  height: 40px;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #2a2a2a;
+}
