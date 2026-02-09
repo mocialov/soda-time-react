@@ -1,6 +1,6 @@
-# Popcorn Time React
+# Soda Time React
 
-A modern React + TypeScript rewrite of Popcorn Time desktop application.
+A modern React + TypeScript rewrite of Soda Time desktop application.
 
 ## 🚀 Tech Stack
 
