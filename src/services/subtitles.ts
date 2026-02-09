@@ -20,7 +20,7 @@ export interface SubtitleSearchOptions {
 
 class SubtitleService {
   private readonly openSubtitlesUrl = 'https://rest.opensubtitles.org/search'
-  private readonly userAgent = 'Popcorn Time v1.0'
+  private readonly userAgent = 'Soda Time v1.0'
 
   async search(options: SubtitleSearchOptions): Promise<Subtitle[]> {
     const params = new URLSearchParams()

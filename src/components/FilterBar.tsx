@@ -1,10 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './FilterBar.css'
 
 interface FilterBarProps {
-  currentTab: 'movies' | 'shows' | 'anime'
-  onTabChange: (tab: 'movies' | 'shows' | 'anime') => void
   genre?: string
   onGenreChange?: (genre: string) => void
   sort?: string
@@ -18,8 +16,6 @@ interface FilterBarProps {
 }
 
 const FilterBar = ({
-  currentTab,
-  onTabChange,
   genre,
   onGenreChange,
   sort,
@@ -32,16 +28,9 @@ const FilterBar = ({
   types = []
 }: FilterBarProps) => {
   const [searchQuery, setSearchQuery] = useState('')
-  const showRandomize = true
-  const showWatchlist = true
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
-
-  const handleTabClick = (tab: 'movies' | 'shows' | 'anime') => {
-    onTabChange(tab)
-    if (tab === 'movies') navigate('/movies')
-    else if (tab === 'shows') navigate('/shows')
-    else if (tab === 'anime') navigate('/anime')
-  }
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,33 +46,34 @@ const FilterBar = ({
     }
   }
 
-  return (
-    <div className="filter-bar">
-      <ul className="nav nav-left">
-        <li 
-          className={`source ${currentTab === 'movies' ? 'active' : ''}`}
-          onClick={() => handleTabClick('movies')}
-        >
-          Movies
-        </li>
-        <li 
-          className={`source ${currentTab === 'shows' ? 'active' : ''}`}
-          onClick={() => handleTabClick('shows')}
-        >
-          TV Series
-        </li>
-        <li 
-          className={`source ${currentTab === 'anime' ? 'active' : ''}`}
-          onClick={() => handleTabClick('anime')}
-        >
-          Anime
-        </li>
-      </ul>
+  const toggleDropdown = (dropdown: string) => {
+    setOpenDropdown(openDropdown === dropdown ? null : dropdown)
+  }
 
+  const handleItemClick = (callback: (value: string) => void, value: string) => {
+    callback(value)
+    setOpenDropdown(null)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  return (
+    <div className="filter-bar" ref={dropdownRef}>
       <ul className="nav nav-filters">
         {types && types.length > 0 && type && onTypeChange && (
-          <li className="dropdown filter">
-            <a className="dropdown-toggle">
+          <li className={`dropdown filter ${openDropdown === 'type' ? 'open' : ''}`}>
+            <a className="dropdown-toggle" onClick={() => toggleDropdown('type')}>
               Type
               <span className="value">{type}</span>
               <span className="caret"></span>
@@ -91,7 +81,7 @@ const FilterBar = ({
             <ul className="dropdown-menu">
               {types.map(t => (
                 <li key={t}>
-                  <a onClick={() => onTypeChange(t)}>{t}</a>
+                  <a onClick={() => handleItemClick(onTypeChange, t)}>{t}</a>
                 </li>
               ))}
             </ul>
@@ -99,8 +89,8 @@ const FilterBar = ({
         )}
 
         {genres && genres.length > 0 && genre && onGenreChange && (
-          <li className="dropdown filter">
-            <a className="dropdown-toggle">
+          <li className={`dropdown filter ${openDropdown === 'genre' ? 'open' : ''}`}>
+            <a className="dropdown-toggle" onClick={() => toggleDropdown('genre')}>
               Genre
               <span className="value">{genre}</span>
               <span className="caret"></span>
@@ -108,7 +98,7 @@ const FilterBar = ({
             <ul className="dropdown-menu">
               {genres.map(g => (
                 <li key={g}>
-                  <a onClick={() => onGenreChange(g)}>{g}</a>
+                  <a onClick={() => handleItemClick(onGenreChange, g)}>{g}</a>
                 </li>
               ))}
             </ul>
@@ -116,8 +106,8 @@ const FilterBar = ({
         )}
 
         {sorters && sorters.length > 0 && sort && onSortChange && (
-          <li className="dropdown filter">
-            <a className="dropdown-toggle">
+          <li className={`dropdown filter ${openDropdown === 'sort' ? 'open' : ''}`}>
+            <a className="dropdown-toggle" onClick={() => toggleDropdown('sort')}>
               Sort by
               <span className="value">{sort}</span>
               <span className="caret"></span>
@@ -125,7 +115,7 @@ const FilterBar = ({
             <ul className="dropdown-menu">
               {sorters.map(s => (
                 <li key={s}>
-                  <a onClick={() => onSortChange(s)}>{s}</a>
+                  <a onClick={() => handleItemClick(onSortChange, s)}>{s}</a>
                 </li>
               ))}
             </ul>
@@ -150,26 +140,6 @@ const FilterBar = ({
               )}
             </form>
           </div>
-        </li>
-
-        {showRandomize && (
-          <li>
-            <i className="icon-random" title="Randomize">🎲</i>
-          </li>
-        )}
-
-        {showWatchlist && (
-          <li>
-            <i className="icon-watchlist" title="Watchlist">📥</i>
-          </li>
-        )}
-
-        <li>
-          <i className="icon-favorites" title="Favorites">❤️</i>
-        </li>
-
-        <li>
-          <i className="icon-about" title="About">ℹ️</i>
         </li>
 
         <li>

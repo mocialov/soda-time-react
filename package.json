@@ -1,8 +1,8 @@
 {
-  "name": "popcorn-time-react",
+  "name": "soda-time-react",
   "version": "1.0.0",
   "type": "module",
-  "description": "Popcorn Time React Rewrite",
+  "description": "Soda Time - Movie Streaming Application",
   "main": "public/electron.cjs",
   "private": true,
   "scripts": {
@@ -45,8 +45,8 @@
     "wait-on": "^7.2.0"
   },
   "build": {
-    "appId": "com.popcorntime.app",
-    "productName": "Popcorn Time",
+    "appId": "com.sodatime.app",
+    "productName": "Soda Time",
     "directories": {
       "output": "dist"
     },

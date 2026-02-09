@@ -20,9 +20,8 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
   const [hasMore, setHasMore] = useState(true)
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [currentTab, setCurrentTab] = useState<'movies' | 'shows' | 'anime'>('movies')
   
-  const { isBookmarked, addBookmark, removeBookmark, isWatched } = useApp()
+  const { isWatched } = useApp()
   const { startStream } = useStream()
 
   const loadMovies = async () => {
@@ -76,23 +75,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
     onPlayMovie?.()
   }
 
-  const toggleBookmark = async (movie: Movie, e: React.MouseEvent) => {
-    e.stopPropagation()
-    
-    if (isBookmarked(movie.imdb_id)) {
-      await removeBookmark(movie.imdb_id)
-    } else {
-      await addBookmark({
-        imdb_id: movie.imdb_id,
-        title: movie.title,
-        year: movie.year,
-        poster: movie.poster,
-        type: 'movie',
-        rating: movie.rating
-      })
-    }
-  }
-
   const renderStars = (rating: number | undefined) => {
     if (!rating) return null
     const stars = []
@@ -133,8 +115,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
     return (
       <>
         <FilterBar
-          currentTab={currentTab}
-          onTabChange={setCurrentTab}
           genre={genre}
           onGenreChange={setGenre}
           sort={sort}
@@ -151,8 +131,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
   return (
     <div className="movie-browser">
       <FilterBar
-        currentTab={currentTab}
-        onTabChange={setCurrentTab}
         genre={genre}
         onGenreChange={setGenre}
         sort={sort}
@@ -177,13 +155,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
                   alt={movie.title} 
                 />
                 <div className="cover-overlay">
-                  <i 
-                    className={`action-icon favorites ${isBookmarked(movie.imdb_id) ? 'active' : ''}`}
-                    onClick={(e) => toggleBookmark(movie, e)}
-                    title="Add to favorites"
-                  >
-                    {isBookmarked(movie.imdb_id) ? '★' : '☆'}
-                  </i>
                   <i 
                     className={`action-icon watched ${isWatched(movie.imdb_id) ? 'active' : ''}`}
                     title={isWatched(movie.imdb_id) ? 'Watched' : 'Not watched'}

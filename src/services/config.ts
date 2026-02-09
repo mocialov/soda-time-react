@@ -1,6 +1,6 @@
 // Configuration constants for the application
 export const Config = {
-  title: 'Popcorn Time',
+  title: 'Soda Time',
   platform: typeof process !== 'undefined' ? process.platform : 'web',
   
   genres: [

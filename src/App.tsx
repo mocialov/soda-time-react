@@ -4,7 +4,6 @@ import { AppProvider } from './contexts/AppContext'
 import { StreamProvider } from './contexts/StreamContext'
 import Header from './components/Header'
 import MovieBrowser from './components/MovieBrowser'
-import TvShowBrowser from './components/TvShowBrowser'
 import Settings from './components/Settings'
 import VideoPlayer from './components/VideoPlayer'
 import './App.css'
@@ -27,8 +26,6 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<MovieBrowser onPlayMovie={handlePlayMovie} />} />
           <Route path="/movies" element={<MovieBrowser onPlayMovie={handlePlayMovie} />} />
-          <Route path="/shows" element={<TvShowBrowser onPlayMovie={handlePlayMovie} />} />
-          <Route path="/anime" element={<MovieBrowser onPlayMovie={handlePlayMovie} />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>

@@ -56,7 +56,7 @@ export interface ShowCache {
 
 class DatabaseService {
   private db: IDBDatabase | null = null
-  private readonly dbName = 'PopcornTimeDB'
+  private readonly dbName = 'SodaTimeDB'
   private readonly version = 1
 
   async init(): Promise<void> {

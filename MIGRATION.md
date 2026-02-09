@@ -2,7 +2,7 @@
 
 ## What Has Been Migrated
 
-The Popcorn Time desktop app has been successfully transformed into a modern React application with all core functionality:
+The desktop streaming app has been successfully transformed into a modern React application with all core functionality:
 
 ### ✅ Fully Functional Features
 
@@ -124,6 +124,6 @@ react/
 
 ## 💡 Notes
 
-This is a **complete rewrite** that maintains the spirit of the original Popcorn Time while using modern web technologies. All core functionality has been migrated and is working. The codebase is now more maintainable, type-safe, and follows modern React best practices.
+This is a **complete rewrite** using modern web technologies. All core functionality has been migrated and is working. The codebase is now more maintainable, type-safe, and follows modern React best practices.
 
 The app is production-ready for basic movie/TV show browsing and streaming!

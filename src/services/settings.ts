@@ -58,8 +58,8 @@ export interface AppSettings {
 }
 
 const defaultSettings: AppSettings = {
-  projectName: 'Popcorn Time',
-  projectUrl: 'https://popcorntime.sh',
+  projectName: 'Soda Time',
+  projectUrl: 'https://sodatime.app',
   
   language: 'en',
   translateSynopsis: true,
@@ -87,8 +87,8 @@ const defaultSettings: AppSettings = {
   subtitle_font: 'Arial',
   
   httpApiPort: 8008,
-  httpApiUsername: 'popcorn',
-  httpApiPassword: 'popcorn',
+  httpApiUsername: 'soda',
+  httpApiPassword: 'soda',
   connectionLimit: 100,
   dhtEnable: true,
   streamPort: 0,
@@ -109,7 +109,7 @@ const defaultSettings: AppSettings = {
 
 class SettingsService {
   private settings: AppSettings
-  private storageKey = 'popcorn_settings'
+  private storageKey = 'soda_settings'
 
   constructor() {
     this.settings = this.load()

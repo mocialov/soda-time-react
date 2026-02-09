@@ -123,7 +123,7 @@ class TorrentService {
       this.streamInfo.state = 'connecting';
 
       const torrent = this.client.add(magnetUrl, {
-        path: path.join(os.tmpdir(), 'popcorn-time')
+        path: path.join(os.tmpdir(), 'soda-time')
       });
 
       this.currentTorrent = torrent;
