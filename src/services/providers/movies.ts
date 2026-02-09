@@ -8,7 +8,6 @@ interface YTSMovie {
   title: string
   year: number
   rating: number
-  summary: string
   runtime: number
   genres: string[]
   language: string
@@ -19,6 +18,19 @@ interface YTSMovie {
   large_cover_image: string
   yt_trailer_code: string
   torrents: YTSTorrent[]
+}
+
+interface TMDBMovie {
+  overview: string
+  vote_average: number
+  backdrop_path: string | null
+}
+
+interface OMDbMovie {
+  Plot: string
+  imdbRating: string
+  Poster: string
+  Response: string
 }
 
 interface YTSTorrent {
@@ -45,12 +57,56 @@ interface YTSResponse {
   }
 }
 
+interface YTSDetailResponse {
+  status: string
+  status_message: string
+  data: {
+    movie: YTSMovie
+  }
+}
+
 class MovieProvider extends BaseProvider<Movie> {
+  private omdbCache: Map<string, OMDbMovie> = new Map()
+
   constructor() {
     super(Config.apiEndpoints.movies)
   }
+
+  private async fetchOMDbDetails(imdb_id: string): Promise<OMDbMovie | null> {
+    // Check if API key is configured
+    if (!Config.omdbApiKey) {
+      return null
+    }
+
+    // Check cache first
+    if (this.omdbCache.has(imdb_id)) {
+      return this.omdbCache.get(imdb_id)!
+    }
+
+    try {
+      const response = await fetch(
+        `${Config.apiEndpoints.omdb}/?i=${imdb_id}&apikey=${Config.omdbApiKey}`
+      )
+      
+      if (!response.ok) {
+        console.warn(`OMDb API error: ${response.status} ${response.statusText}`)
+        return null
+      }
+      
+      const data = await response.json()
+      
+      if (data.Response === 'True' && data.Plot && data.Plot !== 'N/A') {
+        this.omdbCache.set(imdb_id, data)
+        return data
+      }
+    } catch (error) {
+      console.warn('OMDb fetch failed:', error)
+    }
+    
+    return null
+  }
   
-  private convertYTSToMovie(ytsMovie: YTSMovie): Movie {
+  private convertYTSToMovie(ytsMovie: YTSMovie, omdbData?: OMDbMovie | null): Movie {
     const torrents: Record<string, TorrentInfo> = {}
     
     // Standard BitTorrent trackers (works in Electron/Node.js)
@@ -85,7 +141,7 @@ class MovieProvider extends BaseProvider<Movie> {
       rating: ytsMovie.rating,
       poster: ytsMovie.medium_cover_image,
       backdrop: ytsMovie.background_image_original,
-      synopsis: ytsMovie.summary,
+      synopsis: omdbData?.Plot && omdbData.Plot !== 'N/A' ? omdbData.Plot : undefined,
       runtime: ytsMovie.runtime ? `${ytsMovie.runtime} min` : undefined,
       trailer: ytsMovie.yt_trailer_code ? `https://www.youtube.com/watch?v=${ytsMovie.yt_trailer_code}` : undefined,
       genres: ytsMovie.genres,
@@ -145,14 +201,17 @@ class MovieProvider extends BaseProvider<Movie> {
   }
 
   async detail(imdb_id: string): Promise<Movie> {
-    const endpoint = `/movie_details.json?imdb_id=${imdb_id}`
-    const response = await super.fetch<YTSResponse>(endpoint)
+    const endpoint = `/movie_details.json?imdb_id=${imdb_id}&with_images=true&with_cast=true`
+    const response = await super.fetch<YTSDetailResponse>(endpoint)
     
-    if (response.status !== 'ok' || !response.data.movies || response.data.movies.length === 0) {
+    if (response.status !== 'ok' || !response.data.movie) {
       throw new Error('Movie not found')
     }
     
-    return this.convertYTSToMovie(response.data.movies[0])
+    // Fetch synopsis from OMDb since YTS doesn't provide it
+    const omdbData = await this.fetchOMDbDetails(imdb_id)
+    
+    return this.convertYTSToMovie(response.data.movie, omdbData)
   }
 
   async search(query: string, page: number = 1): Promise<ProviderResult<Movie>> {

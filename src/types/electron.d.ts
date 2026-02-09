@@ -1,4 +1,10 @@
 // Global type definitions for Electron IPC
+interface WindowAPI {
+  minimize: () => void
+  maximize: () => void
+  close: () => void
+}
+
 interface TorrentAPI {
   start: (magnetUrl: string, title: string) => Promise<{ 
     success: boolean
@@ -14,6 +20,7 @@ interface TorrentAPI {
 }
 
 interface ElectronAPI {
+  window: WindowAPI
   torrent: TorrentAPI
 }
 

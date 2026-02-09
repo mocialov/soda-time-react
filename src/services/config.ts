@@ -44,8 +44,15 @@ export const Config = {
     shows: typeof window !== 'undefined' && window.location.hostname === 'localhost' 
       ? '/api/tvmaze' 
       : 'https://api.tvmaze.com',
-    anime: 'https://api.jikan.moe/v4'
+    anime: 'https://api.jikan.moe/v4',
+    omdb: 'https://www.omdbapi.com'
   },
+
+  // OMDb API Key (easier to get than TMDB - just requires email)
+  // Get your FREE key instantly at: http://www.omdbapi.com/apikey.aspx
+  // Just enter your email and click the activation link - takes 1 minute!
+  // Provides 1,000 free requests per day
+  omdbApiKey: '134fa8fb', // Add your OMDb API key here
 
   // Torrent trackers
   trackers: {

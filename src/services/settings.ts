@@ -7,6 +7,7 @@ export interface AppSettings {
   // UI Settings
   language: string
   translateSynopsis: boolean
+  aiEnhancedSynopsis: boolean
   coversShowRating: boolean
   watchedCovers: string
   showAdvancedSettings: boolean
@@ -63,6 +64,7 @@ const defaultSettings: AppSettings = {
   
   language: 'en',
   translateSynopsis: true,
+  aiEnhancedSynopsis: true,
   coversShowRating: true,
   watchedCovers: 'fade',
   showAdvancedSettings: false,
@@ -160,4 +162,7 @@ class SettingsService {
 }
 
 export const settingsService = new SettingsService()
+
+// Convenience function for getting all settings
+export const getSettings = (): AppSettings => settingsService.getAll()
 export default settingsService

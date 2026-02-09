@@ -3,13 +3,13 @@ import './Sidebar.css'
 
 interface SidebarProps {
   currentView: string
-  onViewChange: (view: 'movies' | 'settings') => void
+  onViewChange: (view: 'movies') => void
 }
 
 const Sidebar = ({ currentView, onViewChange }: SidebarProps) => {
   const navigate = useNavigate()
 
-  const handleNavigation = (view: 'movies' | 'settings', path: string) => {
+  const handleNavigation = (view: 'movies', path: string) => {
     onViewChange(view)
     navigate(path)
   }
@@ -23,16 +23,6 @@ const Sidebar = ({ currentView, onViewChange }: SidebarProps) => {
         >
           <span className="nav-icon">🎬</span>
           <span className="nav-label">Movies</span>
-        </button>
-
-        <div className="sidebar-spacer"></div>
-        
-        <button
-          className={`nav-item ${currentView === 'settings' ? 'active' : ''}`}
-          onClick={() => handleNavigation('settings', '/settings')}
-        >
-          <span className="nav-icon">⚙️</span>
-          <span className="nav-label">Settings</span>
         </button>
       </nav>
     </aside>

@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Movie } from '../services/providers'
-import { useApp } from '../contexts/AppContext'
 import { useStream } from '../contexts/StreamContext'
+import { getSettings } from '../services/settings'
+import { aiSynopsisService } from '../services/ai-synopsis'
 import './MovieDetail.css'
 
 interface MovieDetailProps {
@@ -12,41 +13,45 @@ interface MovieDetailProps {
 
 const MovieDetail = ({ movie, onClose, onPlay }: MovieDetailProps) => {
   const [selectedQuality, setSelectedQuality] = useState<string>('1080p')
-  const { isBookmarked, addBookmark, removeBookmark, isWatched, markAsWatched, markAsUnwatched } = useApp()
+  const [displayedSynopsis, setDisplayedSynopsis] = useState<string>(movie.synopsis || 'Synopsis not available.')
+  const [isLoadingSynopsis, setIsLoadingSynopsis] = useState<boolean>(false)
   const { startStream } = useStream()
+
+  // Generate AI-enhanced synopsis when component mounts
+  useEffect(() => {
+    const loadAiSynopsis = async () => {
+      const settings = getSettings()
+      
+      if (settings.aiEnhancedSynopsis && aiSynopsisService.isAvailable() && movie.synopsis) {
+        setIsLoadingSynopsis(true)
+        try {
+          const enhancedSynopsis = await aiSynopsisService.generateSynopsis(
+            movie.title,
+            movie.synopsis,
+            movie.year,
+            movie.rating,
+            movie.genres
+          )
+          setDisplayedSynopsis(enhancedSynopsis)
+        } catch (error) {
+          console.error('Failed to generate AI synopsis:', error)
+          setDisplayedSynopsis(movie.synopsis || 'Synopsis not available.')
+        } finally {
+          setIsLoadingSynopsis(false)
+        }
+      } else {
+        setDisplayedSynopsis(movie.synopsis || 'Synopsis not available.')
+      }
+    }
+
+    loadAiSynopsis()
+  }, [movie.imdb_id, movie.synopsis])
 
   const availableQualities = movie.torrents ? Object.keys(movie.torrents) : []
   const maxQuality = availableQualities.includes('1080p') ? '1080p' : availableQualities.includes('720p') ? '720p' : '480p'
   
   if (!selectedQuality || !availableQualities.includes(selectedQuality)) {
     setSelectedQuality(maxQuality)
-  }
-
-  const handleToggleBookmark = async () => {
-    if (isBookmarked(movie.imdb_id)) {
-      await removeBookmark(movie.imdb_id)
-    } else {
-      await addBookmark({
-        imdb_id: movie.imdb_id,
-        title: movie.title,
-        year: movie.year,
-        poster: movie.poster,
-        type: 'movie',
-        rating: movie.rating
-      })
-    }
-  }
-
-  const handleToggleWatched = async () => {
-    if (isWatched(movie.imdb_id)) {
-      await markAsUnwatched(movie.imdb_id)
-    } else {
-      await markAsWatched({
-        imdb_id: movie.imdb_id,
-        watched: true,
-        date: Date.now()
-      })
-    }
   }
 
   const handlePlay = async () => {
@@ -141,25 +146,19 @@ const MovieDetail = ({ movie, onClose, onPlay }: MovieDetailProps) => {
                 </div>
               </div>
 
-              <div className="overview">{movie.synopsis || 'Synopsis not available.'}</div>
+              <div className="overview">
+                {isLoadingSynopsis ? (
+                  <div className="synopsis-loading">
+                    <div className="loading-spinner"></div>
+                    <span>Generating enhanced synopsis...</span>
+                  </div>
+                ) : (
+                  displayedSynopsis
+                )}
+              </div>
             </div>
 
             <div className="bottom-container">
-              <div className="action-buttons">
-                <button 
-                  className={`toggle-button ${isBookmarked(movie.imdb_id) ? 'active' : ''}`}
-                  onClick={handleToggleBookmark}
-                >
-                  {isBookmarked(movie.imdb_id) ? '★ Remove from Bookmarks' : '☆ Add to Bookmarks'}
-                </button>
-                <button 
-                  className={`toggle-button ${isWatched(movie.imdb_id) ? 'active' : ''}`}
-                  onClick={handleToggleWatched}
-                >
-                  {isWatched(movie.imdb_id) ? '👁 Mark as Unseen' : '👁 Mark as Seen'}
-                </button>
-              </div>
-
               <div className="play-controls">
                 <button className="play-btn" onClick={handlePlay}>
                   ▶ Watch Now

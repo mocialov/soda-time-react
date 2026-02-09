@@ -1,29 +1,24 @@
 import './Header.css'
 
+// Check if running in Electron
+const isElectron = typeof window !== 'undefined' && window.electronAPI
+
 const Header = () => {
   const handleMinimize = () => {
-    if (window.require) {
-      const { remote } = window.require('electron')
-      remote.getCurrentWindow().minimize()
+    if (isElectron) {
+      window.electronAPI.window.minimize()
     }
   }
 
   const handleMaximize = () => {
-    if (window.require) {
-      const { remote } = window.require('electron')
-      const win = remote.getCurrentWindow()
-      if (win.isMaximized()) {
-        win.unmaximize()
-      } else {
-        win.maximize()
-      }
+    if (isElectron) {
+      window.electronAPI.window.maximize()
     }
   }
 
   const handleClose = () => {
-    if (window.require) {
-      const { remote } = window.require('electron')
-      remote.getCurrentWindow().close()
+    if (isElectron) {
+      window.electronAPI.window.close()
     }
   }
 

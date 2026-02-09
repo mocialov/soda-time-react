@@ -20,6 +20,7 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
   const [hasMore, setHasMore] = useState(true)
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [loadingDetail, setLoadingDetail] = useState(false)
   
   const { isWatched } = useApp()
   const { startStream } = useStream()
@@ -62,8 +63,19 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
     setSearchQuery(query)
   }
 
-  const handleMovieClick = (movie: Movie) => {
-    setSelectedMovie(movie)
+  const handleMovieClick = async (movie: Movie) => {
+    try {
+      setLoadingDetail(true)
+      // Fetch full movie details to get complete synopsis
+      const detailedMovie = await movieProvider.detail(movie.imdb_id)
+      setSelectedMovie(detailedMovie)
+    } catch (error) {
+      console.error('Failed to load movie details:', error)
+      // Fallback to basic movie data if detail fetch fails
+      setSelectedMovie(movie)
+    } finally {
+      setLoadingDetail(false)
+    }
   }
 
   const handleCloseDetail = () => {
@@ -120,6 +132,7 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
           sort={sort}
           onSortChange={setSort}
           onSearch={handleSearch}
+          searchQuery={searchQuery}
           genres={Config.genres}
           sorters={Config.sorters}
         />
@@ -136,6 +149,7 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
         sort={sort}
         onSortChange={setSort}
         onSearch={handleSearch}
+        searchQuery={searchQuery}
         genres={Config.genres}
         sorters={Config.sorters}
       />
@@ -155,12 +169,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
                   alt={movie.title} 
                 />
                 <div className="cover-overlay">
-                  <i 
-                    className={`action-icon watched ${isWatched(movie.imdb_id) ? 'active' : ''}`}
-                    title={isWatched(movie.imdb_id) ? 'Watched' : 'Not watched'}
-                  >
-                    👁
-                  </i>
                   {movie.rating && (
                     <div className="rating">
                       {renderStars(movie.rating)}
@@ -191,7 +199,13 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
         <div className="loading">Loading more movies...</div>
       )}
 
-      {selectedMovie && (
+      {loadingDetail && (
+        <div className="loading-detail-overlay">
+          <div className="loading">Loading movie details...</div>
+        </div>
+      )}
+
+      {selectedMovie && !loadingDetail && (
         <MovieDetail
           movie={selectedMovie}
           onClose={handleCloseDetail}

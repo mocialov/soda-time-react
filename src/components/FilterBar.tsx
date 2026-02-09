@@ -8,6 +8,7 @@ interface FilterBarProps {
   sort?: string
   onSortChange?: (sort: string) => void
   onSearch?: (query: string) => void
+  searchQuery?: string
   genres?: string[]
   sorters?: string[]
   type?: string
@@ -21,29 +22,35 @@ const FilterBar = ({
   sort,
   onSortChange,
   onSearch,
+  searchQuery: propSearchQuery,
   genres = [],
   sorters = [],
   type,
   onTypeChange,
   types = []
 }: FilterBarProps) => {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [localSearchQuery, setLocalSearchQuery] = useState('')
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
+  useEffect(() => {
+    setLocalSearchQuery(propSearchQuery || '')
+  }, [propSearchQuery])
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (onSearch) {
-      onSearch(searchQuery)
+      onSearch(localSearchQuery)
     }
   }
 
   const handleSearchClear = () => {
-    setSearchQuery('')
+    setLocalSearchQuery('')
     if (onSearch) {
       onSearch('')
     }
+    navigate('/')
   }
 
   const toggleDropdown = (dropdown: string) => {
@@ -130,26 +137,16 @@ const FilterBar = ({
               <input
                 type="text"
                 placeholder="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={localSearchQuery}
+                onChange={(e) => setLocalSearchQuery(e.target.value)}
               />
-              {searchQuery && (
+              {localSearchQuery && (
                 <div className="clear" onClick={handleSearchClear}>
                   ✕
                 </div>
               )}
             </form>
           </div>
-        </li>
-
-        <li>
-          <i 
-            className="icon-settings" 
-            title="Settings"
-            onClick={() => navigate('/settings')}
-          >
-            ⚙️
-          </i>
         </li>
       </ul>
     </div>

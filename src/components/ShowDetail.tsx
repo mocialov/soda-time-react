@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Show } from '../services/providers'
 import { showProvider } from '../services/providers'
 import { useApp } from '../contexts/AppContext'
+import { getSettings } from '../services/settings'
+import { aiSynopsisService } from '../services/ai-synopsis'
 import './MovieDetail.css'
 
 interface ShowDetailProps {
@@ -13,6 +15,8 @@ const ShowDetail = ({ show: initialShow, onClose }: ShowDetailProps) => {
   const [show, setShow] = useState<Show>(initialShow)
   const [loading, setLoading] = useState(false)
   const [selectedSeason, setSelectedSeason] = useState(1)
+  const [displayedSynopsis, setDisplayedSynopsis] = useState<string>(initialShow.synopsis || 'Synopsis not available.')
+  const [isLoadingSynopsis, setIsLoadingSynopsis] = useState<boolean>(false)
   const { isBookmarked, addBookmark, removeBookmark } = useApp()
 
   useEffect(() => {
@@ -31,6 +35,36 @@ const ShowDetail = ({ show: initialShow, onClose }: ShowDetailProps) => {
 
     loadShowDetails()
   }, [initialShow.imdb_id])
+
+  // Generate AI-enhanced synopsis when show is loaded
+  useEffect(() => {
+    const loadAiSynopsis = async () => {
+      const settings = getSettings()
+      
+      if (settings.aiEnhancedSynopsis && aiSynopsisService.isAvailable() && show.synopsis) {
+        setIsLoadingSynopsis(true)
+        try {
+          const enhancedSynopsis = await aiSynopsisService.generateSynopsis(
+            show.title,
+            show.synopsis,
+            show.year,
+            show.rating,
+            show.genres
+          )
+          setDisplayedSynopsis(enhancedSynopsis)
+        } catch (error) {
+          console.error('Failed to generate AI synopsis:', error)
+          setDisplayedSynopsis(show.synopsis || 'Synopsis not available.')
+        } finally {
+          setIsLoadingSynopsis(false)
+        }
+      } else {
+        setDisplayedSynopsis(show.synopsis || 'Synopsis not available.')
+      }
+    }
+
+    loadAiSynopsis()
+  }, [show.imdb_id, show.synopsis])
 
   const handleToggleBookmark = async () => {
     if (isBookmarked(show.imdb_id)) {
@@ -84,7 +118,16 @@ const ShowDetail = ({ show: initialShow, onClose }: ShowDetailProps) => {
         <div 
           className="backdrop" 
           style={{ 
-            backgroundImage: show.backdrop ? `url(${show.backdrop})` : 'none'
+            backgroundImage: show.backdr
+                {isLoadingSynopsis ? (
+                  <div className="synopsis-loading">
+                    <div className="loading-spinner"></div>
+                    <span>Generating enhanced synopsis...</span>
+                  </div>
+                ) : (
+                  displayedSynopsis
+                )}
+              
           }}
         >
           <div className="backdrop-overlay"></div>

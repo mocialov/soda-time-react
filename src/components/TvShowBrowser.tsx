@@ -20,6 +20,7 @@ const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [currentTab, setCurrentTab] = useState<'movies' | 'shows' | 'anime'>('shows')
   const [selectedShow, setSelectedShow] = useState<Show | null>(null)
+  const [loadingDetail, setLoadingDetail] = useState(false)
   
   const { isBookmarked, addBookmark, removeBookmark, isWatched } = useApp()
 
@@ -61,8 +62,19 @@ const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
     setSearchQuery(query)
   }
 
-  const handleShowClick = (show: Show) => {
-    setSelectedShow(show)
+  const handleShowClick = async (show: Show) => {
+    try {
+      setLoadingDetail(true)
+      // Fetch full show details to get complete synopsis and episodes
+      const detailedShow = await showProvider.detail(show.imdb_id)
+      setSelectedShow(detailedShow)
+    } catch (error) {
+      console.error('Failed to load show details:', error)
+      // Fallback to basic show data if detail fetch fails
+      setSelectedShow(show)
+    } finally {
+      setLoadingDetail(false)
+    }
   }
 
   const handleCloseDetail = () => {
@@ -116,15 +128,17 @@ const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
     return (
       <>
         <FilterBar
-          currentTab={currentTab}
-          onTabChange={setCurrentTab}
+          type={currentTab}
+          onTypeChange={setCurrentTab}
           genre={genre}
           onGenreChange={setGenre}
           sort={sort}
           onSortChange={setSort}
           onSearch={handleSearch}
+          searchQuery={searchQuery}
           genres={Config.genres}
           sorters={Config.sorters_tv}
+          types={['movies', 'shows', 'anime']}
         />
         <div className="loading">Loading TV shows...</div>
       </>
@@ -134,15 +148,17 @@ const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
   return (
     <div className="movie-browser">
       <FilterBar
-        currentTab={currentTab}
-        onTabChange={setCurrentTab}
+        type={currentTab}
+        onTypeChange={setCurrentTab}
         genre={genre}
         onGenreChange={setGenre}
         sort={sort}
         onSortChange={setSort}
         onSearch={handleSearch}
+        searchQuery={searchQuery}
         genres={Config.genres}
         sorters={Config.sorters_tv}
+        types={['movies', 'shows', 'anime']}
       />
 
       <div className="movie-grid-container">
@@ -166,12 +182,6 @@ const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
                     title="Add to favorites"
                   >
                     {isBookmarked(show.imdb_id) ? '★' : '☆'}
-                  </i>
-                  <i 
-                    className={`action-icon watched ${isWatched(show.imdb_id) ? 'active' : ''}`}
-                    title={isWatched(show.imdb_id) ? 'Watched' : 'Not watched'}
-                  >
-                    👁
                   </i>
                   {show.rating && (
                     <div className="rating">
@@ -205,7 +215,13 @@ const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
         <div className="loading">Loading more shows...</div>
       )}
 
-      {selectedShow && (
+      {loadingDetail && (
+        <div className="loading-detail-overlay">
+          <div className="loading">Loading show details...</div>
+        </div>
+      )}
+
+      {selectedShow && !loadingDetail && (
         <ShowDetail
           show={selectedShow}
           onClose={handleCloseDetail}
