@@ -118,16 +118,7 @@ const ShowDetail = ({ show: initialShow, onClose }: ShowDetailProps) => {
         <div 
           className="backdrop" 
           style={{ 
-            backgroundImage: show.backdr
-                {isLoadingSynopsis ? (
-                  <div className="synopsis-loading">
-                    <div className="loading-spinner"></div>
-                    <span>Generating enhanced synopsis...</span>
-                  </div>
-                ) : (
-                  displayedSynopsis
-                )}
-              
+            backgroundImage: show.backdrop ? `url(${show.backdrop})` : 'none'
           }}
         >
           <div className="backdrop-overlay"></div>
@@ -159,7 +150,16 @@ const ShowDetail = ({ show: initialShow, onClose }: ShowDetailProps) => {
                 </div>
               </div>
 
-              <div className="overview">{show.synopsis || 'Synopsis not available.'}</div>
+              <div className="overview">
+                {isLoadingSynopsis ? (
+                  <div className="synopsis-loading">
+                    <div className="loading-spinner"></div>
+                    <span>Generating enhanced synopsis...</span>
+                  </div>
+                ) : (
+                  displayedSynopsis
+                )}
+              </div>
             </div>
 
             <div className="bottom-container">
