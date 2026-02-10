@@ -454,3 +454,182 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .movie-detail {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    max-width: none;
+  }
+  
+  .detail-content {
+    flex-direction: column;
+    padding: 20px 15px;
+    gap: 20px;
+  }
+  
+  .poster-box {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  .title {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  
+  .metadatas {
+    font-size: 13px;
+    gap: 8px;
+  }
+  
+  .star {
+    font-size: 14px;
+  }
+  
+  .number-container {
+    font-size: 14px;
+  }
+  
+  .overview {
+    font-size: 14px;
+    max-height: none;
+  }
+  
+  .close-icon {
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  
+  .play-btn {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 30px;
+  }
+  
+  .trailer-btn {
+    width: 100%;
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+  
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .toggle-button {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .quality-selector {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .season-selector {
+    gap: 8px;
+  }
+  
+  .season-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .episodes-container {
+    max-height: 300px;
+  }
+  
+  .episode-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .episode-play-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-content {
+    padding: 15px 10px;
+    gap: 15px;
+  }
+  
+  .poster-box {
+    max-width: 200px;
+  }
+  
+  .title {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  
+  .metadatas {
+    font-size: 12px;
+    gap: 6px;
+  }
+  
+  .star {
+    font-size: 12px;
+  }
+  
+  .number-container {
+    font-size: 13px;
+  }
+  
+  .overview {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .close-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+  
+  .play-btn {
+    font-size: 15px;
+    padding: 10px 25px;
+  }
+  
+  .trailer-btn {
+    font-size: 12px;
+    padding: 8px 15px;
+  }
+  
+  .toggle-button {
+    font-size: 12px;
+    min-width: 100px;
+  }
+  
+  .season-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  
+  .episode-number {
+    font-size: 16px;
+  }
+  
+  .episode-title {
+    font-size: 14px;
+  }
+  
+  .episode-overview {
+    font-size: 12px;
+  }
+  
+  .episode-play-btn {
+    font-size: 13px;
+    padding: 6px 15px;
+  }
+}

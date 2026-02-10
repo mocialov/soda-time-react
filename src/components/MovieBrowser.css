@@ -208,3 +208,100 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .movie-grid-container {
+    padding: 15px 20px;
+  }
+  
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+  }
+  
+  .movie-item {
+    /* Remove hover transform on mobile for better performance */
+  }
+  
+  .movie-item:hover {
+    transform: none;
+  }
+  
+  .movie-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+  
+  .movie-title {
+    font-size: 13px;
+  }
+  
+  .movie-year {
+    font-size: 11px;
+  }
+  
+  .rating-stars {
+    gap: 1px;
+  }
+  
+  .star {
+    font-size: 12px;
+  }
+  
+  .rating-value {
+    font-size: 11px;
+  }
+  
+  .load-more {
+    padding: 30px 15px;
+  }
+  
+  .load-more-button {
+    padding: 10px 30px;
+    font-size: 13px;
+  }
+  
+  .loading {
+    height: 200px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-grid-container {
+    padding: 10px 15px;
+  }
+  
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+  }
+  
+  .movie-title {
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  
+  .movie-year {
+    font-size: 10px;
+  }
+  
+  .star {
+    font-size: 10px;
+  }
+  
+  .rating-value {
+    font-size: 10px;
+  }
+  
+  .cover-overlay {
+    /* Always show rating on mobile since there's no hover */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+  }
+  
+  .loading {
+    height: 150px;
+    font-size: 14px;
+  }
+}

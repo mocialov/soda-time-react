@@ -43,3 +43,35 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #777;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    overflow: auto;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  .app {
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .content {
+    overflow-y: visible;
+    padding-bottom: 20px;
+  }
+  
+  /* Improve touch targets */
+  button, a, .movie-item {
+    min-height: 44px;
+  }
+  
+  /* Prevent text selection on double-tap */
+  .movie-item, .nav-item, button {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}
