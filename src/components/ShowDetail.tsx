@@ -202,9 +202,6 @@ const ShowDetail = ({ show: initialShow, onClose }: ShowDetailProps) => {
                             <div className="episode-overview">{episode.overview}</div>
                           )}
                         </div>
-                        {episode.torrents && Object.keys(episode.torrents).length > 0 && (
-                          <button className="episode-play-btn">▶</button>
-                        )}
                       </div>
                     ))}
                   </div>

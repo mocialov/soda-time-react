@@ -1,15 +1,14 @@
 # Soda Time React
 
-A modern React + TypeScript rewrite of Soda Time desktop application.
+A modern React + TypeScript movie discovery application.
 
 ## 🚀 Tech Stack
 
 - **React 18** - UI framework
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
-- **Electron** - Desktop wrapper (replacing NW.js)
 - **React Router** - Navigation
-- **Tailwind CSS** - Utility-first CSS (optional)
+- **Tailwind CSS** - Utility-first CSS
 
 ## 📦 Installation
 
@@ -24,21 +23,11 @@ Run the web version with hot reload:
 npm run dev
 ```
 
-Run as Electron desktop app:
-```bash
-npm run electron:dev
-```
-
 ## 🏗️ Build
 
 Build for production:
 ```bash
 npm run build
-```
-
-Build Electron app:
-```bash
-npm run electron:build
 ```
 
 ## 📁 Project Structure

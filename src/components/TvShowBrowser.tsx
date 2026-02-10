@@ -6,11 +6,7 @@ import FilterBar from './FilterBar'
 import ShowDetail from './ShowDetail'
 import './MovieBrowser.css'
 
-interface TvShowBrowserProps {
-  onPlayMovie?: () => void
-}
-
-const TvShowBrowser = ({ onPlayMovie }: TvShowBrowserProps) => {
+const TvShowBrowser = () => {
   const [shows, setShows] = useState<Show[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)

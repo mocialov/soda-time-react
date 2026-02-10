@@ -2,70 +2,27 @@
   "name": "soda-time-react",
   "version": "1.0.0",
   "type": "module",
-  "description": "Soda Time - Movie Streaming Application",
-  "main": "public/electron.cjs",
+  "description": "Soda Time - Movie Discovery Application",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "electron": "electron .",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5174 && electron .\"",
-    "electron:build": "npm run build && electron-builder"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@google/genai": "^1.40.0",
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.0",
-    "events": "^3.3.0",
-    "memfs": "^4.6.0",
-    "os-browserify": "^0.3.0",
-    "path-browserify": "^1.0.1",
-    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.0",
-    "stream-browserify": "^3.0.0",
-    "util": "^0.12.5",
-    "webtorrent": "^2.1.0"
+    "react-router-dom": "^6.21.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
-    "@types/webtorrent": "^0.109.7",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
-    "concurrently": "^8.2.2",
-    "electron": "^28.1.4",
-    "electron-builder": "^24.9.1",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11",
-    "wait-on": "^7.2.0"
-  },
-  "build": {
-    "appId": "com.sodatime.app",
-    "productName": "Soda Time",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "build/**/*",
-      "public/electron.cjs"
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "public/icon.ico"
-    },
-    "mac": {
-      "target": "dmg",
-      "icon": "public/icon.icns"
-    },
-    "linux": {
-      "target": "AppImage",
-      "icon": "public/icon.png"
-    }
+    "vite": "^5.0.11"
   }
 }

@@ -2,16 +2,11 @@ import { useState, useEffect } from 'react'
 import { movieProvider, Movie } from '../services/providers'
 import { Config } from '../services/config'
 import { useApp } from '../contexts/AppContext'
-import { useStream } from '../contexts/StreamContext'
 import FilterBar from './FilterBar'
 import MovieDetail from './MovieDetail'
 import './MovieBrowser.css'
 
-interface MovieBrowserProps {
-  onPlayMovie?: () => void
-}
-
-const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
+const MovieBrowser = () => {
   const [movies, setMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -23,7 +18,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
   const [loadingDetail, setLoadingDetail] = useState(false)
   
   const { isWatched } = useApp()
-  const { startStream } = useStream()
 
   const loadMovies = async () => {
     try {
@@ -82,11 +76,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
     setSelectedMovie(null)
   }
 
-  const handlePlayFromDetail = () => {
-    setSelectedMovie(null)
-    onPlayMovie?.()
-  }
-
   const renderStars = (rating: number | undefined) => {
     if (!rating) return null
     const stars = []
@@ -110,17 +99,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
     }
     
     return <div className="rating-stars">{stars}</div>
-  }
-
-  const getQualityLabel = (torrents: any) => {
-    if (!torrents) return null
-    const q720 = torrents['720p'] !== undefined
-    const q1080 = torrents['1080p'] !== undefined
-    
-    if (q720 && q1080) return '720p/1080p'
-    if (q1080) return '1080p'
-    if (q720) return '720p'
-    return 'HDRip'
   }
 
   if (loading && movies.length === 0) {
@@ -179,9 +157,6 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
               </div>
               <p className="movie-title" title={movie.title}>{movie.title}</p>
               <p className="movie-year">{movie.year}</p>
-              {movie.torrents && (
-                <p className="movie-quality">{getQualityLabel(movie.torrents)}</p>
-              )}
             </div>
           ))}
         </div>
@@ -209,11 +184,9 @@ const MovieBrowser = ({ onPlayMovie }: MovieBrowserProps) => {
         <MovieDetail
           movie={selectedMovie}
           onClose={handleCloseDetail}
-          onPlay={handlePlayFromDetail}
         />
       )}
     </div>
   )
 }
-
 export default MovieBrowser
