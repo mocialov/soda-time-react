@@ -23,7 +23,7 @@ function AppContent() {
 function App() {
   return (
     <AppProvider>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Router basename={import.meta.env.BASE_URL} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppContent />
       </Router>
     </AppProvider>
