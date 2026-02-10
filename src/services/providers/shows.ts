@@ -1,6 +1,5 @@
 // TV Show provider service - uses EZTV API
 import { BaseProvider, FilterOptions, Show, Episode, ProviderResult } from './base'
-import { Config } from '../config'
 
 interface EZTVTorrent {
   id: number
@@ -189,10 +188,14 @@ class ShowProvider extends BaseProvider<Show> {
         const episodeData = episodesMap.get(episodeKey)!
         const quality = this.extractQuality(torrent.title)
 
+        if (!episodeData.torrents) {
+          episodeData.torrents = {}
+        }
+        
         episodeData.torrents[quality] = {
           url: torrent.magnet_url,
-          seeds: torrent.seeds,
-          peers: torrent.peers
+          seed: torrent.seeds,
+          peer: torrent.peers
         }
       })
 

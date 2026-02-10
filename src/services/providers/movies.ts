@@ -20,12 +20,6 @@ interface YTSMovie {
   torrents: YTSTorrent[]
 }
 
-interface TMDBMovie {
-  overview: string
-  vote_average: number
-  backdrop_path: string | null
-}
-
 interface OMDbMovie {
   Plot: string
   imdbRating: string

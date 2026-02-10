@@ -71,7 +71,7 @@ export abstract class BaseProvider<T> {
     this.baseUrl = baseUrl
   }
 
-  protected async fetch<R>(endpoint: string, options?: RequestInit): Promise<R> {
+  protected async fetchData<R>(endpoint: string, options?: RequestInit): Promise<R> {
     const url = `${this.baseUrl}${endpoint}`
     const cacheKey = url + JSON.stringify(options)
 

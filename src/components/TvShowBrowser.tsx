@@ -125,7 +125,7 @@ const TvShowBrowser = () => {
       <>
         <FilterBar
           type={currentTab}
-          onTypeChange={setCurrentTab}
+          onTypeChange={(type) => setCurrentTab(type as 'movies' | 'shows' | 'anime')}
           genre={genre}
           onGenreChange={setGenre}
           sort={sort}
@@ -145,7 +145,7 @@ const TvShowBrowser = () => {
     <div className="movie-browser">
       <FilterBar
         type={currentTab}
-        onTypeChange={setCurrentTab}
+        onTypeChange={(type) => setCurrentTab(type as 'movies' | 'shows' | 'anime')}
         genre={genre}
         onGenreChange={setGenre}
         sort={sort}
