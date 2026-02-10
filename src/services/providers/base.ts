@@ -28,9 +28,9 @@ export interface TorrentInfo {
   url: string
   seed: number
   peer: number
-  size: string
-  filesize: number
-  provider: string
+  size?: string
+  filesize?: number
+  provider?: string
 }
 
 export interface Show {

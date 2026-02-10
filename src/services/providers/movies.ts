@@ -158,7 +158,7 @@ class MovieProvider extends BaseProvider<Movie> {
     const endpoint = `/list_movies.json?${queryString}`
 
     try {
-      const response = await super.fetch<YTSResponse>(endpoint)
+      const response = await this.fetchData<YTSResponse>(endpoint)
       
       if (response.status !== 'ok' || !response.data.movies) {
         return {
@@ -196,7 +196,7 @@ class MovieProvider extends BaseProvider<Movie> {
 
   async detail(imdb_id: string): Promise<Movie> {
     const endpoint = `/movie_details.json?imdb_id=${imdb_id}&with_images=true&with_cast=true`
-    const response = await super.fetch<YTSDetailResponse>(endpoint)
+    const response = await this.fetchData<YTSDetailResponse>(endpoint)
     
     if (response.status !== 'ok' || !response.data.movie) {
       throw new Error('Movie not found')

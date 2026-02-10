@@ -49,7 +49,7 @@ class AnimeProvider extends BaseProvider<Anime> {
     const endpoint = `/animes/${params.page}?${queryString}`
 
     try {
-      const response = await super.fetch<AnimeAPIResponse>(endpoint)
+      const response = await this.fetchData<AnimeAPIResponse>(endpoint)
       
       return {
         results: response.anime || [],
@@ -66,7 +66,7 @@ class AnimeProvider extends BaseProvider<Anime> {
 
   async detail(mal_id: string): Promise<Anime> {
     const endpoint = `/anime/${mal_id}`
-    return await super.fetch<Anime>(endpoint)
+    return await this.fetchData<Anime>(endpoint)
   }
 
   async search(query: string, page: number = 1): Promise<ProviderResult<Anime>> {
