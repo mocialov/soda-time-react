@@ -13,6 +13,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<MovieBrowser />} />
           <Route path="/movies" element={<MovieBrowser />} />
+          <Route path="/movies/:imdbId" element={<MovieBrowser />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>

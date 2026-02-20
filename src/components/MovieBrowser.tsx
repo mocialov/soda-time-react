@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { movieProvider, Movie } from '../services/providers'
 import { Config } from '../services/config'
 import { useApp } from '../contexts/AppContext'
@@ -18,6 +19,9 @@ const MovieBrowser = () => {
   const [loadingDetail, setLoadingDetail] = useState(false)
   
   const { isWatched } = useApp()
+  const { imdbId } = useParams<{ imdbId: string }>()
+  const navigate = useNavigate()
+  const hasHandledDeepLink = useRef(false)
 
   const loadMovies = async () => {
     try {
@@ -53,6 +57,26 @@ const MovieBrowser = () => {
     loadMovies()
   }, [page, genre, sort, searchQuery])
 
+  // Open movie from URL parameter (deep link)
+  useEffect(() => {
+    if (imdbId && !hasHandledDeepLink.current) {
+      hasHandledDeepLink.current = true
+      const openMovieFromUrl = async () => {
+        try {
+          setLoadingDetail(true)
+          const movie = await movieProvider.detail(imdbId)
+          setSelectedMovie(movie)
+        } catch (error) {
+          console.error('Failed to load movie from URL:', error)
+          navigate('/movies', { replace: true })
+        } finally {
+          setLoadingDetail(false)
+        }
+      }
+      openMovieFromUrl()
+    }
+  }, [imdbId, navigate])
+
   const handleSearch = (query: string) => {
     setSearchQuery(query)
   }
@@ -60,6 +84,7 @@ const MovieBrowser = () => {
   const handleMovieClick = async (movie: Movie) => {
     try {
       setLoadingDetail(true)
+      navigate(`/movies/${movie.imdb_id}`)
       // Fetch full movie details to get complete synopsis
       const detailedMovie = await movieProvider.detail(movie.imdb_id)
       setSelectedMovie(detailedMovie)
@@ -74,6 +99,8 @@ const MovieBrowser = () => {
 
   const handleCloseDetail = () => {
     setSelectedMovie(null)
+    hasHandledDeepLink.current = false
+    navigate('/movies')
   }
 
   const renderStars = (rating: number | undefined) => {
@@ -184,6 +211,7 @@ const MovieBrowser = () => {
         <MovieDetail
           movie={selectedMovie}
           onClose={handleCloseDetail}
+          shareUrl={`${window.location.origin}${import.meta.env.BASE_URL}movies/${selectedMovie.imdb_id}`}
         />
       )}
     </div>

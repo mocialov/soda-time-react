@@ -7,11 +7,13 @@ import './MovieDetail.css'
 interface MovieDetailProps {
   movie: Movie
   onClose: () => void
+  shareUrl?: string
 }
 
-const MovieDetail = ({ movie, onClose }: MovieDetailProps) => {
+const MovieDetail = ({ movie, onClose, shareUrl }: MovieDetailProps) => {
   const [displayedSynopsis, setDisplayedSynopsis] = useState<string>(movie.synopsis || 'Synopsis not available.')
   const [isLoadingSynopsis, setIsLoadingSynopsis] = useState<boolean>(false)
+  const [linkCopied, setLinkCopied] = useState(false)
 
   // Generate AI-enhanced synopsis when component mounts
   useEffect(() => {
@@ -46,6 +48,25 @@ const MovieDetail = ({ movie, onClose }: MovieDetailProps) => {
   const handleWatchTrailer = () => {
     if (movie.trailer) {
       window.open(movie.trailer, '_blank')
+    }
+  }
+
+  const handleCopyLink = async () => {
+    if (!shareUrl) return
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    } catch {
+      // Fallback for browsers that don't support clipboard API
+      const textArea = document.createElement('textarea')
+      textArea.value = shareUrl
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
     }
   }
 
@@ -131,6 +152,11 @@ const MovieDetail = ({ movie, onClose }: MovieDetailProps) => {
                 {movie.trailer && (
                   <button className="trailer-btn" onClick={handleWatchTrailer}>
                     🎬 Watch Trailer
+                  </button>
+                )}
+                {shareUrl && (
+                  <button className="share-btn" onClick={handleCopyLink}>
+                    {linkCopied ? '✅ Link Copied!' : '🔗 Copy Link'}
                   </button>
                 )}
               </div>
