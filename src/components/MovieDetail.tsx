@@ -7,10 +7,9 @@ import './MovieDetail.css'
 interface MovieDetailProps {
   movie: Movie
   onClose: () => void
-  shareUrl?: string
 }
 
-const MovieDetail = ({ movie, onClose, shareUrl }: MovieDetailProps) => {
+const MovieDetail = ({ movie, onClose }: MovieDetailProps) => {
   const [displayedSynopsis, setDisplayedSynopsis] = useState<string>(movie.synopsis || 'Synopsis not available.')
   const [isLoadingSynopsis, setIsLoadingSynopsis] = useState<boolean>(false)
 
