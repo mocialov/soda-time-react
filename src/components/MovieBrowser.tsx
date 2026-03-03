@@ -211,7 +211,6 @@ const MovieBrowser = () => {
         <MovieDetail
           movie={selectedMovie}
           onClose={handleCloseDetail}
-          shareUrl={`${window.location.origin}${import.meta.env.BASE_URL}movies/${selectedMovie.imdb_id}`}
         />
       )}
     </div>
