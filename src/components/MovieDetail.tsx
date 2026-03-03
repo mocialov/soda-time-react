@@ -13,7 +13,6 @@ interface MovieDetailProps {
 const MovieDetail = ({ movie, onClose, shareUrl }: MovieDetailProps) => {
   const [displayedSynopsis, setDisplayedSynopsis] = useState<string>(movie.synopsis || 'Synopsis not available.')
   const [isLoadingSynopsis, setIsLoadingSynopsis] = useState<boolean>(false)
-  const [linkCopied, setLinkCopied] = useState(false)
 
   // Generate AI-enhanced synopsis when component mounts
   useEffect(() => {
@@ -44,31 +43,6 @@ const MovieDetail = ({ movie, onClose, shareUrl }: MovieDetailProps) => {
 
     loadAiSynopsis()
   }, [movie.imdb_id, movie.synopsis])
-
-  const handleWatchTrailer = () => {
-    if (movie.trailer) {
-      window.open(movie.trailer, '_blank')
-    }
-  }
-
-  const handleCopyLink = async () => {
-    if (!shareUrl) return
-    try {
-      await navigator.clipboard.writeText(shareUrl)
-      setLinkCopied(true)
-      setTimeout(() => setLinkCopied(false), 2000)
-    } catch {
-      // Fallback for browsers that don't support clipboard API
-      const textArea = document.createElement('textarea')
-      textArea.value = shareUrl
-      document.body.appendChild(textArea)
-      textArea.select()
-      document.execCommand('copy')
-      document.body.removeChild(textArea)
-      setLinkCopied(true)
-      setTimeout(() => setLinkCopied(false), 2000)
-    }
-  }
 
   const renderStars = (rating: number) => {
     const stars = []
@@ -135,6 +109,20 @@ const MovieDetail = ({ movie, onClose, shareUrl }: MovieDetailProps) => {
                 </div>
               </div>
 
+              {movie.trailer && (
+                <div className="trailer-container">
+                  <iframe
+                    width="100%"
+                    height="200"
+                    src={`https://www.youtube.com/embed/${movie.trailer.split('v=')[1]}`}
+                    title={`${movie.title} Trailer`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+
               <div className="overview">
                 {isLoadingSynopsis ? (
                   <div className="synopsis-loading">
@@ -143,21 +131,6 @@ const MovieDetail = ({ movie, onClose, shareUrl }: MovieDetailProps) => {
                   </div>
                 ) : (
                   displayedSynopsis
-                )}
-              </div>
-            </div>
-
-            <div className="bottom-container">
-              <div className="play-controls">
-                {movie.trailer && (
-                  <button className="trailer-btn" onClick={handleWatchTrailer}>
-                    🎬 Watch Trailer
-                  </button>
-                )}
-                {shareUrl && (
-                  <button className="share-btn" onClick={handleCopyLink}>
-                    {linkCopied ? '✅ Link Copied!' : '🔗 Copy Link'}
-                  </button>
                 )}
               </div>
             </div>

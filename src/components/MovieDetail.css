@@ -172,6 +172,20 @@
   font-weight: 400;
 }
 
+.trailer-container {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+}
+
+.trailer-container iframe {
+  display: block;
+  width: 100%;
+  border: none;
+}
+
 .overview {
   line-height: 1.6;
   color: #ddd;
